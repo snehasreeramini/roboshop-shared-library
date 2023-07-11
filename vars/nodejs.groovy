@@ -52,9 +52,18 @@ def call() {
                     }
                 }
             }
+            stage('Check the Release'){
+                steps{
+                    script {
+                        def UPLOAD_STATUS = sh(returnStdout: true, script: "curl -L -s http://34.230.80.134:8081/services/rest/repository/browse/${COMPONENT} | grep ${COMPONENT}-${TAG_NAME}.zip")
+                        print UPLOAD_STATUS
+                    }
+                }
+            }
             stage('Prepare Artifacts') {
                 when {
                     expression { env.TAG_NAME != null }
+                    expression { env.UPLOAD_STATUS == "" }
                 }
                 steps {
                     sh '''
