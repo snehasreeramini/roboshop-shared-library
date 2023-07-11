@@ -1,9 +1,7 @@
 def lintChecks() {
     sh '''
        # ~/node_modules/jslint/bin/jslint.js server.js
-      pylint *.py
-      echo lint check for ${COMPONENT}
-      
+       echo Lint Check for ${COMPONENT}
 '''
 }
 
@@ -24,7 +22,6 @@ def call() {
                     }
                 }
             }
-
             stage('sonar Checks') {
                 steps {
                     script {
