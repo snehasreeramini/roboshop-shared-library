@@ -10,7 +10,7 @@ def call() {
         agent any
 
         environment {
-            SONAR= credentials('SONAR')
+            SONAR = credentials('SONAR')
         }
 
         stages {
@@ -25,33 +25,51 @@ def call() {
             stage('sonar Checks') {
                 steps {
                     script {
-                        env.ARGS="-Dsonar.sources=."
+                        env.ARGS = "-Dsonar.sources=."
                         common.sonarCheck()
                     }
                 }
             }
+            stage('Test Cases') {
+
+                parallel {
+
+                    stage('Unit Tests') {
+                        steps {
+                            sh 'echo unit Tests'
+                        }
+                    }
+                    stage('Integration Tests') {
+                        steps {
+                            sh 'echo Integration Tests'
+                        }
+                    }
+                    stage('Functional Tests') {
+                        steps {
+                            sh 'echo Functional Tests'
+                        }
+                    }
+                }
+            }
+            stage('Prepare Artifacts') {
+                when {
+                    expression { env.TAG_NAME != null }
+                }
+                steps {
+                    sh 'echo'
+                }
+            }
+
+
+            stage('Upload Artifacts') {
+                when {
+                    expression { env.TAG_NAME != null }
+                }
+                steps {
+                    sh 'echo'
+                }
+            }
+
         } //end of stages
-
-    stage('Test Cases') {
-
-        parallel {
-
-            stage('Unit Tests') {
-                steps {
-                    sh 'echo unit Tests'
-                }
-            }
-            stage('Integration Tests') {
-                steps {
-                    sh 'echo Integration Tests'
-                }
-            }
-            stage('Functional Tests') {
-                steps {
-                    sh 'echo Functional Tests'
-                }
-            }
-        }
-    }
     }
 }

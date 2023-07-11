@@ -30,27 +30,28 @@ def call() {
                     }
                 }
             }
-        } //end of stages
-        stage('Test Cases') {
+            stage('Test Cases') {
 
-            parallel {
+                parallel {
 
-                stage('Unit Tests') {
-                    steps {
-                        sh 'echo unit Tests'
+                    stage('Unit Tests') {
+                        steps {
+                            sh 'echo unit Tests'
+                        }
                     }
-                }
-                stage('Integration Tests') {
-                    steps {
-                        sh 'echo Integration Tests'
+                    stage('Integration Tests') {
+                        steps {
+                            sh 'echo Integration Tests'
+                        }
                     }
-                }
-                stage('Functional Tests') {
-                    steps {
-                        sh 'echo Functional Tests'
+                    stage('Functional Tests') {
+                        steps {
+                            sh 'echo Functional Tests'
+                        }
                     }
                 }
             }
-        }
+        } //end of stages
+
     }
 }
