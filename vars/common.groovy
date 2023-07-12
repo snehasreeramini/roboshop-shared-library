@@ -9,7 +9,7 @@ def sonarCheck() {
 
 def lintChecks() {
     stage('Lint Checks')
-    if (env.App_type == "nodejs") {
+    if (env.App_type == "angularjs") {
         sh '''
        # ~/node_modules/jslint/bin/jslint.js server.js
        echo Lint Check for ${COMPONENT}
@@ -26,16 +26,21 @@ def lintChecks() {
         sh '''
        # ~/node_modules/jslint/bin/jslint.js server.js
       pylint *.py
-      echo lint check for ${COMPONENT}   
+      echo lint check for ${COMPONENT}-${TAG_NAME}.zip* .py *.ini requirments.txt 
 '''
     }
     else if (env.App_type == "maven"){
         sh '''
+        mvn clean pakage
+        mv target/${COMPONENT}=1.0.jar ${COMPINENT}Paasord}
        # ~/node_modules/jslint/bin/jslint.js server.js
       mvn checkstyle:check
       echo lint check for ${COMPONENT}
+jar
 '''
+
     }
+
 }
 
 
@@ -64,28 +69,45 @@ def TestCases() {
      if (env.UPLOAD_STATUS == "") {
 
          stage('Prepare Artifacts') {
-           if(env.APP_TYPE == "nodejs") {
+           if(env.APP_TYPE == "angularjs") {
                sh '''
-                     npm install
-                     zip -r ${COMPONENT}-${TAG_NAME}.zip node_modules server.js
-'''
+                    ls -l
+                    npm install
+                    ls -l
+                    zip -r ${COMPONENT}-${TAG_NAME}.zip $(COMPONENT}.
+           '''
            }
-             if(env.APP_TYPE == "maven") {
+            else if(env.APP_TYPE == "maven") {
                  sh '''
                     mvn clean package
                     mv target/${COMPONENT}-1.0.jar ${COMPONENT}.jar
                     zip -r ${component}-${TAG_NAME}.zip ${COMPONENT}.jar
 '''
              }
-             if(env.APP_TYPE == "python") {
+             else if(env.APP_TYPE == "python") {
                  sh '''
-                     npm install
                      zip -r ${COMPONENT}-${TAG_NAME}.zip node_modules server.js
 '''
              }
+           else if(env.APP_TYPE == "golang") {
+               sh '''
+                  go mod init ${COMPONENT}
+                  go get
+                  go build
+                  zip -r ${COMPONENT}-${TAG_NAME}.zip ${COMPONENT}
+               '''
+           }
+           else if(env.APP_TYPE == "nginx") {
+               sh '''
+                  cd static
+                  zip -r ../${COMPONENT}-${TAG_NAME}.zip *
+               '''
+           }
          }
+
+
         stage('Upload Artifacts') {
-            witgCredentials([usernamePassword(credentialsId: 'NUXUS', passwordVariable: 'NEXUS_PSW', usernameVariable: 'NEXUS_USR')]) {
+            witHCredentials([usernamePassword(credentialsId: 'NUXUS', passwordVariable: 'NEXUS_PSW', usernameVariable: 'NEXUS_USR')]) {
                 sh '''
                        curl -f -v -u ${NEXUS_USR}:${NEXUS_PSW} --upload-file ${COMPONENT}-${TAG_NAME}.zip http://34.230.80.134:8081/repository/${COMPONENT}/${COMPONENT}.zip-${TAG_NAME}
 
