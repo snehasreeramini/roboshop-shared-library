@@ -1,10 +1,4 @@
-def lintChecks() {
-    sh '''
-       # ~/node_modules/jslint/bin/jslint.js server.js
-       echo Lint Check for ${COMPONENT}
-'''
-}
-
+env.App_TYPE = "golang"
 def call() {
     pipeline {
         agent any

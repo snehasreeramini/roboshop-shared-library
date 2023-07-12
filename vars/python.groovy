@@ -1,11 +1,4 @@
-def lintChecks() {
-    sh '''
-       # ~/node_modules/jslint/bin/jslint.js server.js
-      pylint *.py
-      echo lint check for ${COMPONENT}
-      
-'''
-}
+env.App_TYPE = "python"
 
 def call() {
     pipeline {
