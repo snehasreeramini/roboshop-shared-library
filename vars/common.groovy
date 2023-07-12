@@ -83,11 +83,13 @@ def TestCases() {
 '''
              }
          }
-        stage('Upload Artifacts'){
-            sh '''
+        stage('Upload Artifacts') {
+            witgCredentials([usernamePassword(credentialsId: 'NUXUS', passwordVariable: 'NEXUS_PSW', usernameVariable: 'NEXUS_USR')]) {
+                sh '''
                        curl -f -v -u ${NEXUS_USR}:${NEXUS_PSW} --upload-file ${COMPONENT}-${TAG_NAME}.zip http://34.230.80.134:8081/repository/${COMPONENT}/${COMPONENT}.zip-${TAG_NAME}
 
 '''
+            }
         }
  }
  }

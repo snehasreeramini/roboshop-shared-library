@@ -1,6 +1,7 @@
 env.APP_TYPE = "nodejs"
 def call() {
     node {
+        git branch: 'main', url: "https://github.com/snehasreeramini/${COMPONENT}"
         common.lintCheck()
         env.ARGS = "-Dsonar.sources=."
         common.sonarCheck()
