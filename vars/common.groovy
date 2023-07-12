@@ -72,8 +72,9 @@ def TestCases() {
            }
              if(env.APP_TYPE == "maven") {
                  sh '''
-                     npm install
-                     zip -r ${COMPONENT}-${TAG_NAME}.zip node_modules server.js
+                    mvn clean package
+                    mv target/${COMPONENT}-1.0.jar ${COMPONENT}.jar
+                    zip -r ${component}-${TAG_NAME}.zip ${COMPONENT}.jar
 '''
              }
              if(env.APP_TYPE == "python") {
